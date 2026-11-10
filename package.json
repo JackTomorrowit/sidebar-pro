@@ -1,0 +1,10 @@
+{
+  "name": "sidebar-pro",
+  "private": true,
+  "version": "1.0.0",
+  "description": "DeepSeek Harness sidebar plugins: Sidebar Notes and Sidebar Todo.",
+  "license": "MIT",
+  "workspaces": [
+    "packages/*"
+  ]
+}
