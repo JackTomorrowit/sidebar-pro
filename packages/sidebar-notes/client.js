@@ -11,7 +11,7 @@
  * as a React element, so unmounting removes it together with the panel.
  */
 window.__ModuleLoader__.load({
-  id: '@local/sidebar-notes',
+  id: 'dsh-plugin-sidebar-notes',
   factory(require) {
     const React = require('react');
     const h = React.createElement;
