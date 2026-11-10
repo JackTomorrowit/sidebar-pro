@@ -1,0 +1,4 @@
+- insert:
+    - id: sidebar-todo
+      name: 'dsh-plugin-sidebar-todo'
+      config: {}
