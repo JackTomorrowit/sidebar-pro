@@ -9,25 +9,33 @@ DeepSeek Harness（DSH）侧栏插件合集，包含两个可直接安装的插�
 
 > 两个包均为 Host + Web 两半的 DSH 插件：`dsh.bundle.patch` 负责注入加载项，`dsh.client.platform=web` 让 Web 端加载 `client.js`。
 
-## 安装（同一台机器/另一个账号）
+## 安装（另一台电脑 / 另一个账号）
 
-在目标机器的 DSH 配置目录下，二选一：
+### 方式一：npm（发布后最简单，市场式）
 
-1. **从本仓库安装（推荐）**
-   ```powershell
-   cd <你的 DSH 工作区>
-   # 以本地路径安装其中一个包（示例：待办）
-   npm install --save "<仓库路径>\packages\sidebar-todo"
-   # 然后在 DSH 的 profile package.json 的 dsh.profile.bundles 中加入包名：
-   #   dsh-plugin-sidebar-todo
-   #   dsh-plugin-sidebar-notes
-   # 并重启 DSH 主进程
-   ```
+包发布到 npm 后，在目标机器的 DSH 中执行（或插件管理界面按包名安装）：
 
-2. **手动拷贝**：把 `packages\sidebar-todo`（或 `sidebar-notes`）复制到目标 profile 的 `node_modules\` 下，
-   并在 profile `package.json` 的 `dsh.profile.bundles` 里登记包名，重启 DSH。
+```powershell
+dsh plugin add dsh-plugin-sidebar-notes
+dsh plugin add dsh-plugin-sidebar-todo
+```
 
-> 说明：DSH 目前没有公开的"一键从 GitHub 安装插件"命令，最稳妥是上面两种方式。安装后侧栏会出现对应入口。
+或让 DSH 的插件管理器按包名安装，然后**重启 DSH**。
+
+### 方式二：从 GitHub 手动安装
+
+1. `git clone https://github.com/JackTomorrowit/sidebar-pro`
+2. 把 `packages\sidebar-notes`、`packages\sidebar-todo` 复制到
+   `%USERPROFILE%\.dsh\profiles\<profile>\node_modules\` 下，
+   目录名分别为 `dsh-plugin-sidebar-notes`、`dsh-plugin-sidebar-todo`
+3. 在 profile 的 `package.json` 的 `dsh.profile.bundles` 中加入这两个包名
+4. 重启 DSH 主进程，侧栏出现两个入口即成功
+
+### 发布（维护者）
+
+仓库带 GitHub Actions：在 npmjs.com 建好 granular token 后，加到仓库
+Settings → Secrets and variables → Actions → `NPM_TOKEN`；
+然后推一个 tag（如 `v1.3.15`）即自动发布两个包。
 
 ## 目录
 
