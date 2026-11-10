@@ -19,11 +19,19 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Publish sidebar-notes
         working-directory: packages/sidebar-notes
+        continue-on-error: true
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Publish sidebar-todo
         working-directory: packages/sidebar-todo
+        continue-on-error: true
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Publish session-bridge
+        working-directory: packages/session-bridge
+        continue-on-error: true
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
