@@ -1,0 +1,4 @@
+- insert:
+    - id: sidebar-notes
+      name: 'dsh-plugin-sidebar-notes'
+      config: {}
