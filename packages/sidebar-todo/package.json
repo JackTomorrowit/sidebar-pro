@@ -4,6 +4,19 @@
   "type": "module",
   "description": "Sidebar Todo: a todo panel in the DeepSeek Harness Web UI sidebar with tasks, projects problem logs, monthly goals and a week (period) view.",
   "license": "MIT",
+  "author": "JackTomorrowit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JackTomorrowit/sidebar-pro.git",
+    "directory": "packages/sidebar-todo"
+  },
+  "homepage": "https://github.com/JackTomorrowit/sidebar-pro/tree/main/packages/sidebar-todo",
+  "bugs": {
+    "url": "https://github.com/JackTomorrowit/sidebar-pro/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -18,7 +31,8 @@
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dsh": {
     "bundle": { "patch": "./cordis.patch.yml" },
