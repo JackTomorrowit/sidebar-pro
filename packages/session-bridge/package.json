@@ -1,0 +1,44 @@
+{
+  "name": "dsh-plugin-session-bridge",
+  "version": "0.2.1",
+  "type": "module",
+  "description": "Session Bridge: lets an agent send one message to another conversation in a DSH workspace; the workspace root is configurable in plugin settings.",
+  "license": "MIT",
+  "author": "JackTomorrowit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JackTomorrowit/sidebar-pro.git",
+    "directory": "packages/session-bridge"
+  },
+  "homepage": "https://github.com/JackTomorrowit/sidebar-pro/tree/main/packages/session-bridge",
+  "bugs": {
+    "url": "https://github.com/JackTomorrowit/sidebar-pro/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@deepseek-ai/schemastery": "*"
+  },
+  "peerDependenciesMeta": {
+    "@deepseek-ai/schemastery": {
+      "optional": true
+    }
+  },
+  "exports": {
+    ".": "./index.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "cordis.patch.yml",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": { "patch": "./cordis.patch.yml" }
+  }
+}
