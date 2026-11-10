@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sidebar Todo",
+    "description": "Adds a todo entry and panel above Sidebar Notes in the left sidebar. It ports the workbench todo page: a period view (this week, next week, month calendar) and a category view (weekly work, monthly goals, projects with problem logs, quick notes), with repeat rules and completion ticks, saved locally and syncable from the workbench."
+  }
+}
