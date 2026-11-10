@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Sidebar Notes",
+    "description": "Adds a note panel with its own icon in the left sidebar; notes are listed vertically with fuzzy search over titles and content, save automatically to local Markdown files (plus a browser copy), and copy in one click."
+  }
+}
