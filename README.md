@@ -5,7 +5,7 @@ DeepSeek Harness（DSH）侧栏插件合集，包含两个可直接安装的插�
 | 包 | 版本 | 功能 |
 | --- | --- | --- |
 | `packages/sidebar-notes` | 1.3.0 | 侧栏便签：本地 Markdown 持久化、独立侧栏入口 |
-| `packages/sidebar-todo` | 1.5.7 | 侧栏待办：任务/重复规则、项目问题记录（高亮/降序/单条删除）、月目标、周期视图（拖拽换日期）、随手记 |
+| `packages/sidebar-todo` | 1.3.15 | 侧栏待办：任务/重复规则、项目问题记录（高亮/降序/单条删除）、月目标（编辑框随内容/视口自动增高）、周期视图（拖拽换日期）、随手记 |
 
 > 两个包均为 Host + Web 两半的 DSH 插件：`dsh.bundle.patch` 负责注入加载项，`dsh.client.platform=web` 让 Web 端加载 `client.js`。
 
