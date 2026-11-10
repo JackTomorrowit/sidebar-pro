@@ -28,8 +28,8 @@ window.__ModuleLoader__.load({
     /** Document-relative base of the Host API (see index.js). */
     const API_BASE = 'api/sidebarTodo';
     /** Bump CLIENT_BUILD whenever client.js changes, so the running page is identifiable. */
-    const CLIENT_VERSION = '1.3.12';
-    const CLIENT_BUILD = '2026-11-10T11:05';
+    const CLIENT_VERSION = '1.3.15';
+    const CLIENT_BUILD = '2026-11-10T13:52';
     /** Debounce before a change is written to this browser and the Host. */
     const SAVE_DELAY = 700;
 
@@ -406,6 +406,7 @@ window.__ModuleLoader__.load({
       '.dsh-todo-field{box-sizing:border-box;width:100%;padding:6px 7px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;',
       'background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);font:inherit;font-size:12px;line-height:18px}',
       '.dsh-todo-field:focus-visible{outline:2px solid var(--dsw-alias-brand-primary);outline-offset:0}',
+      '.dsh-todo-field[data-autogrow]{resize:none;overflow-y:hidden}',
       '.dsh-todo-meeting-text{min-height:180px;resize:vertical}',
       '.dsh-todo-dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;',
       'min-height:150px;box-sizing:border-box;border:1px dashed var(--dsw-alias-border-l1);border-radius:8px;padding:18px 12px;',
@@ -2389,6 +2390,11 @@ window.__ModuleLoader__.load({
             ),
           );
 
+        /** Textareas already focused+selected once, so re-renders do not steal the caret. */
+        const editFocusOnce = new WeakSet();
+        /** Every mounted auto-growing textarea (works even inside a shadow root). */
+        const autoGrowNodes = new Set();
+
         function TodoPanel() {
           const [revision, setRevision] = React.useState(0);
           const [composing, setComposing] = React.useState(false);
@@ -2416,6 +2422,18 @@ window.__ModuleLoader__.load({
               return undefined;
             }
           }, []);
+
+          // Recompute every auto-growing textarea after each render: the ref callback may run
+          // before the browser lays the value out, so this pass guarantees the full height.
+          React.useEffect(() => {
+            for (const node of autoGrowNodes) {
+              if (node && node.isConnected !== false) autoGrowTextarea(node);
+            }
+            if (typeof document !== 'undefined' && typeof document.querySelectorAll === 'function') {
+              const nodes = document.querySelectorAll('textarea[data-autogrow]');
+              for (const node of nodes) autoGrowTextarea(node);
+            }
+          });
 
           const backToChat = () => {
             try {
@@ -2513,19 +2531,48 @@ window.__ModuleLoader__.load({
           };
 
           // ----- period view -------------------------------------------------
-          const AUTO_GROW_MIN = 60;
-          const AUTO_GROW_MAX = 260;
+          const AUTO_GROW_FALLBACK_MAX = 260;
+          const autoGrowCap = () => {
+            if (typeof window === 'undefined' || !window.innerHeight) return AUTO_GROW_FALLBACK_MAX;
+            return Math.max(200, Math.floor(window.innerHeight * 0.6));
+          };
           const autoGrowTextarea = (element) => {
             if (!element || typeof element.style === 'undefined') return;
-            element.style.height = 'auto';
+            const style = element.style;
+            style.height = 'auto';
+            style.overflowY = 'hidden';
+            const natural = Number(element.offsetHeight) || 0; // height implied by rows
             const scroll = Number(element.scrollHeight) || 0;
-            element.style.height = Math.max(AUTO_GROW_MIN, Math.min(scroll, AUTO_GROW_MAX)) + 'px';
-            element.style.overflowY = scroll > AUTO_GROW_MAX ? 'auto' : 'hidden';
+            const content = Math.max(natural, scroll);
+            const cap = autoGrowCap();
+            style.height = Math.min(content, cap) + 'px';
+            style.overflowY = scroll > cap ? 'auto' : 'hidden';
+          };
+          /** Run now, then once after layout (rAF) and once after the task queue (setTimeout 0). */
+          const scheduleAutoGrow = (element) => {
+            autoGrowTextarea(element);
+            if (typeof window === 'undefined') return;
+            if (typeof window.requestAnimationFrame === 'function') {
+              window.requestAnimationFrame(() => autoGrowTextarea(element));
+            }
+            if (typeof window.setTimeout === 'function') {
+              window.setTimeout(() => autoGrowTextarea(element), 0);
+            }
           };
           const autoGrowRef = (element) => {
-            autoGrowTextarea(element);
-            if (element && typeof window !== 'undefined' && typeof window.requestAnimationFrame === 'function') {
-              window.requestAnimationFrame(() => autoGrowTextarea(element));
+            if (!element) return;
+            autoGrowNodes.add(element);
+            scheduleAutoGrow(element);
+            const dataset = element.dataset || {};
+            if (dataset.editFocus === '1' && !editFocusOnce.has(element)) {
+              editFocusOnce.add(element);
+              try {
+                if (typeof element.focus === 'function') element.focus();
+                if (typeof element.select === 'function') element.select();
+                element.scrollTop = 0;
+              } catch (error) {
+                /* focus/select may be unavailable */
+              }
             }
           };
           const autoGrowInput = (event) => autoGrowTextarea(event && event.target);
@@ -2538,6 +2585,7 @@ window.__ModuleLoader__.load({
                 className: 'dsh-todo-field',
                 rows: 3,
                 placeholder: tr('todoText'),
+                'data-autogrow': '1',
                 ref: autoGrowRef,
                 onInput: autoGrowInput,
                 value: model.draft.text,
@@ -2822,6 +2870,8 @@ window.__ModuleLoader__.load({
                       className: 'dsh-todo-field',
                       rows: 3,
                       autoFocus: true,
+                      'data-autogrow': '1',
+                      'data-edit-focus': '1',
                       ref: autoGrowRef,
                       onInput: autoGrowInput,
                       value: model.editingText,
@@ -2877,6 +2927,9 @@ window.__ModuleLoader__.load({
                 className: 'dsh-todo-field',
                 rows: isNote ? 4 : 3,
                 autoFocus: true,
+                'data-autogrow': '1',
+                ref: autoGrowRef,
+                onInput: autoGrowInput,
                 placeholder: isProject ? tr('projectName') : tr('noTask'),
                 value: model.categoryText,
                 onChange: (event) => {
@@ -3021,6 +3074,9 @@ window.__ModuleLoader__.load({
                           h('textarea', {
                             className: 'dsh-todo-field',
                             rows: 2,
+                            'data-autogrow': '1',
+                            ref: autoGrowRef,
+                            onInput: autoGrowInput,
                             placeholder: tr('recordPlaceholder'),
                             value: project.draft.problem,
                             onChange: (event) => {
@@ -3245,6 +3301,8 @@ window.__ModuleLoader__.load({
                   h('textarea', {
                     className: 'dsh-todo-field',
                     rows: 3,
+                    'data-autogrow': '1',
+                    'data-edit-focus': '1',
                     ref: autoGrowRef,
                     onInput: autoGrowInput,
                     placeholder: tr('todoText'),
@@ -3344,6 +3402,9 @@ window.__ModuleLoader__.load({
                   h('textarea', {
                     className: 'dsh-todo-field',
                     rows: 8,
+                    'data-autogrow': '1',
+                    ref: autoGrowRef,
+                    onInput: autoGrowInput,
                     placeholder: tr('importPlaceholder'),
                     value: model.importText,
                     onChange: (event) => {
@@ -3453,6 +3514,9 @@ window.__ModuleLoader__.load({
                   h('textarea', {
                     className: 'dsh-todo-field dsh-todo-meeting-text',
                     rows: 10,
+                    'data-autogrow': '1',
+                    ref: autoGrowRef,
+                    onInput: autoGrowInput,
                     placeholder: tr('meetingTranscriptLabel'),
                     'aria-label': tr('meetingTranscriptLabel'),
                     value: model.meetingTranscript,
