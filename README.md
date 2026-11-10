@@ -11,6 +11,24 @@ DeepSeek Harness（DSH）侧栏插件合集，包含两个可直接安装的插�
 
 ## 安装（另一台电脑 / 另一个账号）
 
+### 方式零：免 npm，直接装 tgz（推荐，最快）
+
+两个包已打成 tarball 放在本仓库 `dist/`：
+
+```powershell
+dsh plugin add https://raw.githubusercontent.com/JackTomorrowit/sidebar-pro/main/dist/dsh-plugin-sidebar-notes.tgz
+dsh plugin add https://raw.githubusercontent.com/JackTomorrowit/sidebar-pro/main/dist/dsh-plugin-sidebar-todo.tgz
+```
+
+若上面的命令不被识别，退化为：
+
+```powershell
+# 在 profile 目录（%USERPROFILE%\.dsh\profiles\<profile>）执行
+npm install https://raw.githubusercontent.com/JackTomorrowit/sidebar-pro/main/dist/dsh-plugin-sidebar-todo.tgz
+npm install https://raw.githubusercontent.com/JackTomorrowit/sidebar-pro/main/dist/dsh-plugin-sidebar-notes.tgz
+# 再把 dsh-plugin-sidebar-notes / dsh-plugin-sidebar-todo 加进 package.json 的 dsh.profile.bundles，然后重启 DSH
+```
+
 ### 方式一：npm（发布后最简单，市场式）
 
 包发布到 npm 后，在目标机器的 DSH 中执行（或插件管理界面按包名安装）：
