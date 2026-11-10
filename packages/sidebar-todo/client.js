@@ -14,7 +14,7 @@
  * imported without changing the workbench.
  */
 window.__ModuleLoader__.load({
-  id: '@local/sidebar-todo',
+  id: 'dsh-plugin-sidebar-todo',
   factory(require) {
     const React = require('react');
     const h = React.createElement;
