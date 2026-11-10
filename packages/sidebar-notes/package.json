@@ -4,6 +4,19 @@
   "type": "module",
   "description": "Sidebar Notes: a note-taking panel in the DeepSeek Harness Web UI sidebar; notes persist to local Markdown files.",
   "license": "MIT",
+  "author": "JackTomorrowit",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JackTomorrowit/sidebar-pro.git",
+    "directory": "packages/sidebar-notes"
+  },
+  "homepage": "https://github.com/JackTomorrowit/sidebar-pro/tree/main/packages/sidebar-notes",
+  "bugs": {
+    "url": "https://github.com/JackTomorrowit/sidebar-pro/issues"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "exports": {
     ".": "./index.js",
     "./client": "./client.js",
@@ -16,7 +29,8 @@
     "cordis.patch.yml",
     "locale/*.json",
     "icon.svg",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "dsh": {
     "bundle": { "patch": "./cordis.patch.yml" },
